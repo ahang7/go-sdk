@@ -1,0 +1,3 @@
+{"level":"info","ts":"2024-06-29T00:47:12+08:00","caller":"example/main.go:55","msg":"Info message","val":"hello world"}
+{"level":"warn","ts":"2024-06-29T00:47:12+08:00","caller":"example/main.go:56","msg":"Warn message","backoff":1}
+{"level":"fatal","ts":"2024-06-29T00:47:12+08:00","caller":"example/main.go:57","msg":"Fatal msg","val":"2024-06-29T00:47:12+08:00"}
