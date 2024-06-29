@@ -15,11 +15,11 @@ const (
 	configFileType = "yaml"
 )
 
-var configFile string
+var configFlagFile string
 var configIn string
 
 func init() {
-	pflag.StringVarP(&configFile, configFlagName, "c", configFile, "set the configuration file, the default configuration file type is yaml")
+	pflag.StringVarP(&configFlagFile, configFlagName, "c", configFlagFile, "set the configuration file, the default configuration file type is yaml")
 }
 
 func addConfigFile(prefixFlag string, configName string, fs *pflag.FlagSet) {
@@ -31,20 +31,20 @@ func addConfigFile(prefixFlag string, configName string, fs *pflag.FlagSet) {
 
 	cobra.OnInitialize(func() {
 		zlog.Info("init viper")
-		if configFile != "" {
-			viper.SetConfigFile(configFile)
+		if configFlagFile != "" {
+			viper.SetConfigFile(configFlagFile)
 		} else {
 			if configIn != "" {
 				viper.AddConfigPath(configIn)
 			} else {
 				// 默认为当前包下的config包
 				defaultIn := getRootDir()
-				viper.AddConfigPath(defaultIn)
+				viper.AddConfigPath(defaultIn + "/config")
 			}
 			viper.SetConfigFile(configName)
-			viper.SetConfigType(configFileType)
-		}
 
+		}
+		viper.SetConfigType(configFileType)
 		if err := viper.ReadInConfig(); err != nil {
 			zlog.Fatal("viper read config failed", zlog.Errors(err))
 		}
