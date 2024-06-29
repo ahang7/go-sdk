@@ -6,9 +6,10 @@ import (
 	"github.com/ahang7/go-sdk/log/zlog"
 )
 
-func App(appname string) *cli.App {
+func App(prefix, appname string) *cli.App {
 	ao := options.NewAppOption()
 	app := cli.NewApp(
+		prefix,
 		appname,
 		cli.WithFlags(ao),
 		cli.WithDescription("This is a test case that provides sample code for the cli"),
@@ -23,5 +24,6 @@ func App(appname string) *cli.App {
 }
 
 func main() {
-	App("example")
+	// 这里的prefix最终也为环境变量的前缀
+	App("example", "app").Run()
 }

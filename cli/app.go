@@ -39,12 +39,6 @@ func WithFlags(fi FlagInterface) Option {
 	}
 }
 
-func WithPrefix(prefix string) Option {
-	return func(app *App) {
-		app.prefix = prefix
-	}
-}
-
 func WithDescription(desc string) Option {
 	return func(app *App) {
 		app.description = desc
@@ -69,17 +63,37 @@ func WithRunFunc(run RunFunc) Option {
 	}
 }
 
-func NewApp(appname string, opts ...Option) *App {
+// WithCommand 设置命令行参数
+func WithCommand(use, short, long string) Option {
+	return func(app *App) {
+		app.use = use
+		app.short = short
+		app.long = long
+	}
+}
+
+func NewApp(prefix, appname string, opts ...Option) *App {
 	a := &App{
+		prefix:  prefix,
 		appname: appname,
 	}
 
 	for _, o := range opts {
 		o(a)
 	}
-	// todo: 构建命令行框架
+	a.validateCommand()
+	a.buildCommand()
 
 	return a
+}
+
+func (a *App) validateCommand() {
+	if a.use == "" {
+		a.use = a.appname
+	}
+	if a.long == "" {
+		a.long = a.description
+	}
 }
 
 func (a *App) buildCommand() {
@@ -127,7 +141,7 @@ func (a *App) buildCommand() {
 	a.cmd = cmd
 }
 
-func (a *App) RunApp() {
+func (a *App) Run() {
 	zlog.Info("start app run")
 	if err := a.cmd.Execute(); err != nil {
 		zlog.Fatal("app run failed", zlog.Errors(err))
@@ -136,7 +150,7 @@ func (a *App) RunApp() {
 
 func (a *App) run(cmd *cobra.Command, args []string) error {
 	cmd.Flags().VisitAll(func(flag *pflag.Flag) {
-		zlog.Info("flag: --%s=%q")
+		zlog.Info("cmd visitAll flag", zlog.String(flag.Name, flag.Value.String()))
 	})
 	// todo: 输出 --version
 
