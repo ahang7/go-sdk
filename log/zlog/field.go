@@ -51,5 +51,6 @@ var (
 	Durationp   = zap.Durationp
 	Object      = zap.Object
 	Inline      = zap.Inline
+	Errors      = zap.Error
 	Any         = zap.Any
 )
