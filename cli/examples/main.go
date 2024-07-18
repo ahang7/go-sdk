@@ -19,6 +19,9 @@ func App(prefix, appname string) *cli.App {
 			zlog.Info("The cli started successfully")
 			return nil
 		}),
+		cli.WithCommand("ex",
+			"short example",
+			"this is a test case that provides sample code for the cli"),
 	)
 	return app
 }
